@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+
+/// Spinner Input like HTML5 spinners
 class SpinnerButtonStyle {
   Color color;
 
@@ -86,9 +88,15 @@ class _SpinnerInputState extends State<SpinnerInput>
 
   @override
   void initState() {
+
+    /// initializing variables
     _spinnerValue = widget.spinnerValue;
+
+    /// popup textfield
     textEditingController = TextEditingController(
         text: widget.spinnerValue.toStringAsFixed(widget.fractionDigits));
+
+    /// popup animation controller
     popupAnimationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500));
 
@@ -100,6 +108,8 @@ class _SpinnerInputState extends State<SpinnerInput>
       }
     });
 
+
+    // initialize buttons
     _plusSpinnerStyle = widget.plusButton ?? SpinnerButtonStyle();
     _plusSpinnerStyle.child ??= Icon(Icons.add);
     _plusSpinnerStyle.color ??= Color(0xff9EA8F0);

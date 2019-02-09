@@ -1,6 +1,6 @@
 name: spinner_input
-description: A Spinner Input for flutter
-version: 0.0.1
+description: A Spinner Input for flutter. like html5 input-spinners
+version: 0.1.0
 author: Ali Azmoude <ali.azmoude@gmail.com>
 homepage: https://github.com/Ali-Azmoud/spinner_input
 
