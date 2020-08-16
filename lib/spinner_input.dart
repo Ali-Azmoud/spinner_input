@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-
 /// Spinner Input like HTML5 spinners
 class SpinnerButtonStyle {
   Color color;
@@ -80,7 +79,6 @@ class _SpinnerInputState extends State<SpinnerInput>
   final _focusNode = FocusNode();
 
   Timer timer;
-  double _spinnerValue;
 
   SpinnerButtonStyle _plusSpinnerStyle;
   SpinnerButtonStyle _minusSpinnerStyle;
@@ -88,10 +86,6 @@ class _SpinnerInputState extends State<SpinnerInput>
 
   @override
   void initState() {
-
-    /// initializing variables
-    _spinnerValue = widget.spinnerValue;
-
     /// popup textfield
     textEditingController = TextEditingController(
         text: widget.spinnerValue.toStringAsFixed(widget.fractionDigits));
@@ -107,7 +101,6 @@ class _SpinnerInputState extends State<SpinnerInput>
             extentOffset: textEditingController.value.text.length);
       }
     });
-
 
     // initialize buttons
     _plusSpinnerStyle = widget.plusButton ?? SpinnerButtonStyle();
@@ -257,11 +250,10 @@ class _SpinnerInputState extends State<SpinnerInput>
   }
 
   void increase() {
-    double value = _spinnerValue;
+    double value = widget.spinnerValue;
     value += widget.step;
     if (value <= widget.maxValue) {
       textEditingController.text = value.toStringAsFixed(widget.fractionDigits);
-      _spinnerValue = value;
       setState(() {
         widget.onChange(value);
       });
@@ -269,11 +261,10 @@ class _SpinnerInputState extends State<SpinnerInput>
   }
 
   void decrease() {
-    double value = _spinnerValue;
+    double value = widget.spinnerValue;
     value -= widget.step;
     if (value >= widget.minValue) {
       textEditingController.text = value.toStringAsFixed(widget.fractionDigits);
-      _spinnerValue = value;
       setState(() {
         widget.onChange(value);
       });
@@ -337,16 +328,15 @@ class _SpinnerInputState extends State<SpinnerInput>
                         double value = double.parse(textEditingController.text);
                         if (value <= widget.maxValue &&
                             value >= widget.minValue) {
-                          _spinnerValue = value;
                           setState(() {
                             widget.onChange(value);
                           });
                         } else {
-                          textEditingController.text = _spinnerValue
+                          textEditingController.text = widget.spinnerValue
                               .toStringAsFixed(widget.fractionDigits);
                         }
                       } catch (e) {
-                        textEditingController.text = _spinnerValue
+                        textEditingController.text = widget.spinnerValue
                             .toStringAsFixed(widget.fractionDigits);
                       }
                       popupAnimationController.reset();
