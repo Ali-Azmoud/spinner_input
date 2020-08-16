@@ -190,6 +190,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                   if (widget.disabledPopup == false) {
                     if (popupAnimationController.isDismissed) {
                       popupAnimationController.forward();
+                      _focusNode.requestFocus();
                     } else
                       popupAnimationController.reverse();
                   }
@@ -237,13 +238,14 @@ class _SpinnerInputState extends State<SpinnerInput>
               ),
             ],
           ),
-          Positioned(
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            child: textFieldPopUp(),
-          ),
+          if (widget.disabledPopup == false)
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              child: textFieldPopUp(),
+            ),
         ],
       ),
     );
