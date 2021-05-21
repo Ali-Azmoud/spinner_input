@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'dart:async';
+
+import 'package:intl/intl.dart' as intl;
 
 /// Spinner Input like HTML5 spinners
 class SpinnerButtonStyle {
@@ -43,6 +46,7 @@ class SpinnerInput extends StatefulWidget {
   final SpinnerButtonStyle plusButton;
   final SpinnerButtonStyle minusButton;
   final SpinnerButtonStyle popupButton;
+  final intl.NumberFormat numberFormat;
   final TextStyle popupTextStyle;
   final TextDirection direction;
 
@@ -63,6 +67,7 @@ class SpinnerInput extends StatefulWidget {
     this.plusButton,
     this.minusButton,
     this.popupButton,
+    this.numberFormat,
     this.direction = TextDirection.ltr,
     this.popupTextStyle =
         const TextStyle(fontSize: 18, color: Colors.black87, height: 1.15),
@@ -87,8 +92,8 @@ class _SpinnerInputState extends State<SpinnerInput>
   @override
   void initState() {
     /// popup textfield
-    textEditingController = TextEditingController(
-        text: widget.spinnerValue.toStringAsFixed(widget.fractionDigits));
+    textEditingController =
+        TextEditingController(text: _formatted(widget.spinnerValue));
 
     /// popup animation controller
     popupAnimationController =
@@ -200,8 +205,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                     padding: widget.middleNumberPadding,
                     color: widget.middleNumberBackground,
                     child: Text(
-                      widget.spinnerValue
-                          .toStringAsFixed(widget.fractionDigits),
+                      _formatted(widget.spinnerValue),
                       textAlign: TextAlign.center,
                       style: widget.middleNumberStyle,
                     )),
@@ -255,7 +259,7 @@ class _SpinnerInputState extends State<SpinnerInput>
     double value = widget.spinnerValue;
     value += widget.step;
     if (value <= widget.maxValue) {
-      textEditingController.text = value.toStringAsFixed(widget.fractionDigits);
+      textEditingController.text = _formatted(value);
       setState(() {
         widget.onChange(value);
       });
@@ -266,7 +270,7 @@ class _SpinnerInputState extends State<SpinnerInput>
     double value = widget.spinnerValue;
     value -= widget.step;
     if (value >= widget.minValue) {
-      textEditingController.text = value.toStringAsFixed(widget.fractionDigits);
+      textEditingController.text = _formatted(value);
       setState(() {
         widget.onChange(value);
       });
@@ -300,6 +304,14 @@ class _SpinnerInputState extends State<SpinnerInput>
             children: <Widget>[
               Expanded(
                 child: TextField(
+                  // inputFormatters: [
+                  //   TextInputFormatter.withFunction((oldValue, newValue) {
+                  //     if (widget.numberFormat != null) {
+                  //       return TextEditingValue(text: );
+                  //     }
+                  //     return newValue;
+                  //   })
+                  // ],
                   maxLength: maxLength,
                   focusNode: _focusNode,
                   keyboardType: TextInputType.number,
@@ -327,19 +339,22 @@ class _SpinnerInputState extends State<SpinnerInput>
                     onPressed: () {
                       FocusScope.of(context).requestFocus(new FocusNode());
                       try {
-                        double value = double.parse(textEditingController.text);
+                        double value = widget.numberFormat != null
+                            ? widget.numberFormat
+                                .parse(textEditingController.text)
+                            : double.parse(textEditingController.text);
                         if (value <= widget.maxValue &&
                             value >= widget.minValue) {
                           setState(() {
                             widget.onChange(value);
                           });
                         } else {
-                          textEditingController.text = widget.spinnerValue
-                              .toStringAsFixed(widget.fractionDigits);
+                          textEditingController.text =
+                              _formatted(widget.spinnerValue);
                         }
                       } catch (e) {
-                        textEditingController.text = widget.spinnerValue
-                            .toStringAsFixed(widget.fractionDigits);
+                        textEditingController.text =
+                            _formatted(widget.spinnerValue);
                       }
                       popupAnimationController.reset();
                     },
@@ -352,5 +367,11 @@ class _SpinnerInputState extends State<SpinnerInput>
         ),
       ),
     );
+  }
+
+  String _formatted(double value) {
+    return widget.numberFormat != null
+        ? widget.numberFormat.format(value)
+        : value.toStringAsFixed(widget.fractionDigits);
   }
 }
