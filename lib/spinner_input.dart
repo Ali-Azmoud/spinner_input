@@ -6,16 +6,16 @@ import 'package:intl/intl.dart' as intl;
 
 /// Spinner Input like HTML5 spinners
 class SpinnerButtonStyle {
-  Color color;
+  Color? color;
 
-  Color textColor;
-  Widget child;
-  double width;
-  double height;
-  BorderRadius borderRadius;
-  double highlightElevation;
-  Color highlightColor;
-  double elevation;
+  Color? textColor;
+  Widget? child;
+  double? width;
+  double? height;
+  BorderRadius? borderRadius;
+  double? highlightElevation;
+  Color? highlightColor;
+  double? elevation;
 
   SpinnerButtonStyle(
       {this.color,
@@ -32,26 +32,26 @@ class SpinnerButtonStyle {
 class SpinnerInput extends StatefulWidget {
   final bool disabledPopup;
   final double spinnerValue;
-  final double middleNumberWidth;
+  final double? middleNumberWidth;
   final EdgeInsets middleNumberPadding;
   final TextStyle middleNumberStyle;
-  final Color middleNumberBackground;
+  final Color? middleNumberBackground;
   final double minValue;
   final double maxValue;
   final double step;
   final int fractionDigits;
   final Duration longPressSpeed;
-  final Function(double newValue) onChange;
+  final Function(double newValue)? onChange;
   final bool disabledLongPress;
-  final SpinnerButtonStyle plusButton;
-  final SpinnerButtonStyle minusButton;
-  final SpinnerButtonStyle popupButton;
-  final intl.NumberFormat numberFormat;
+  final SpinnerButtonStyle? plusButton;
+  final SpinnerButtonStyle? minusButton;
+  final SpinnerButtonStyle? popupButton;
+  final intl.NumberFormat? numberFormat;
   final TextStyle popupTextStyle;
   final TextDirection direction;
 
   SpinnerInput({
-    @required this.spinnerValue,
+    required this.spinnerValue,
     this.middleNumberWidth,
     this.middleNumberBackground,
     this.middleNumberPadding = const EdgeInsets.all(5),
@@ -79,19 +79,19 @@ class SpinnerInput extends StatefulWidget {
 
 class _SpinnerInputState extends State<SpinnerInput>
     with TickerProviderStateMixin {
-  TextEditingController textEditingController;
-  AnimationController popupAnimationController;
+  late TextEditingController textEditingController;
+  late AnimationController popupAnimationController;
   final _focusNode = FocusNode();
 
-  Timer timer;
+  Timer? timer;
 
-  SpinnerButtonStyle _plusSpinnerStyle;
-  SpinnerButtonStyle _minusSpinnerStyle;
-  SpinnerButtonStyle _popupButtonStyle;
+  late SpinnerButtonStyle _plusSpinnerStyle;
+  late SpinnerButtonStyle _minusSpinnerStyle;
+  late SpinnerButtonStyle _popupButtonStyle;
 
   @override
   void initState() {
-    /// popup textfield
+    /// popup text field
     textEditingController =
         TextEditingController(text: _formatted(widget.spinnerValue));
 
@@ -172,7 +172,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                     highlightColor: _minusSpinnerStyle.highlightColor,
                     highlightElevation: _minusSpinnerStyle.highlightElevation,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: _minusSpinnerStyle.borderRadius),
+                        borderRadius: _minusSpinnerStyle.borderRadius!),
                     onPressed: () {
                       decrease();
                     },
@@ -186,7 +186,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                     }
                   },
                   onLongPressUp: () {
-                    if (timer != null) timer.cancel();
+                    timer?.cancel();
                   },
                 ),
               ),
@@ -222,7 +222,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                     color: _plusSpinnerStyle.color,
                     textColor: _plusSpinnerStyle.textColor,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: _plusSpinnerStyle.borderRadius),
+                        borderRadius: _plusSpinnerStyle.borderRadius!),
                     onPressed: () {
                       increase();
                     },
@@ -236,7 +236,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                     }
                   },
                   onLongPressUp: () {
-                    if (timer != null) timer.cancel();
+                    timer?.cancel();
                   },
                 ),
               ),
@@ -261,7 +261,9 @@ class _SpinnerInputState extends State<SpinnerInput>
     if (value <= widget.maxValue) {
       textEditingController.text = _formatted(value);
       setState(() {
-        widget.onChange(value);
+        if (widget.onChange != null) {
+          widget.onChange!(value);
+        }
       });
     }
   }
@@ -272,7 +274,9 @@ class _SpinnerInputState extends State<SpinnerInput>
     if (value >= widget.minValue) {
       textEditingController.text = _formatted(value);
       setState(() {
-        widget.onChange(value);
+        if (widget.onChange != null) {
+          widget.onChange!(value);
+        }
       });
     }
   }
@@ -335,18 +339,20 @@ class _SpinnerInputState extends State<SpinnerInput>
                     highlightColor: _popupButtonStyle.highlightColor,
                     highlightElevation: _popupButtonStyle.highlightElevation,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: _popupButtonStyle.borderRadius),
+                        borderRadius: _popupButtonStyle.borderRadius!),
                     onPressed: () {
                       FocusScope.of(context).requestFocus(new FocusNode());
                       try {
                         double value = widget.numberFormat != null
-                            ? widget.numberFormat
-                                .parse(textEditingController.text)
+                            ? widget.numberFormat!
+                                .parse(textEditingController.text).toDouble()
                             : double.parse(textEditingController.text);
                         if (value <= widget.maxValue &&
                             value >= widget.minValue) {
                           setState(() {
-                            widget.onChange(value);
+                            if (widget.onChange != null) {
+                              widget.onChange!(value);
+                            }
                           });
                         } else {
                           textEditingController.text =
@@ -371,7 +377,7 @@ class _SpinnerInputState extends State<SpinnerInput>
 
   String _formatted(double value) {
     return widget.numberFormat != null
-        ? widget.numberFormat.format(value)
+        ? widget.numberFormat!.format(value)
         : value.toStringAsFixed(widget.fractionDigits);
   }
 }
