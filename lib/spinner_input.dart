@@ -79,15 +79,15 @@ class SpinnerInput extends StatefulWidget {
 
 class _SpinnerInputState extends State<SpinnerInput>
     with TickerProviderStateMixin {
-  late TextEditingController textEditingController;
-  late AnimationController popupAnimationController;
+  TextEditingController? textEditingController;
+  AnimationController? popupAnimationController;
   final _focusNode = FocusNode();
 
   Timer? timer;
 
-  late SpinnerButtonStyle _plusSpinnerStyle;
-  late SpinnerButtonStyle _minusSpinnerStyle;
-  late SpinnerButtonStyle _popupButtonStyle;
+  SpinnerButtonStyle _plusSpinnerStyle = SpinnerButtonStyle();
+  SpinnerButtonStyle _minusSpinnerStyle = SpinnerButtonStyle();
+  SpinnerButtonStyle _popupButtonStyle = SpinnerButtonStyle();
 
   @override
   void initState() {
@@ -101,9 +101,9 @@ class _SpinnerInputState extends State<SpinnerInput>
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        textEditingController.selection = TextSelection(
+        textEditingController?.selection = TextSelection(
             baseOffset: 0,
-            extentOffset: textEditingController.value.text.length);
+            extentOffset: textEditingController?.value.text.length ?? 0);
       }
     });
 
@@ -147,7 +147,7 @@ class _SpinnerInputState extends State<SpinnerInput>
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
-    textEditingController.dispose();
+    textEditingController?.dispose();
     super.dispose();
   }
 
@@ -192,12 +192,12 @@ class _SpinnerInputState extends State<SpinnerInput>
               ),
               GestureDetector(
                 onTap: () {
-                  if (widget.disabledPopup == false) {
-                    if (popupAnimationController.isDismissed) {
-                      popupAnimationController.forward();
+                  if (widget.disabledPopup == false && popupAnimationController != null) {
+                    if (popupAnimationController!.isDismissed) {
+                      popupAnimationController!.forward();
                       _focusNode.requestFocus();
                     } else
-                      popupAnimationController.reverse();
+                      popupAnimationController!.reverse();
                   }
                 },
                 child: Container(
@@ -259,7 +259,7 @@ class _SpinnerInputState extends State<SpinnerInput>
     double value = widget.spinnerValue;
     value += widget.step;
     if (value <= widget.maxValue) {
-      textEditingController.text = _formatted(value);
+      textEditingController?.text = _formatted(value);
       setState(() {
         if (widget.onChange != null) {
           widget.onChange!(value);
@@ -272,7 +272,7 @@ class _SpinnerInputState extends State<SpinnerInput>
     double value = widget.spinnerValue;
     value -= widget.step;
     if (value >= widget.minValue) {
-      textEditingController.text = _formatted(value);
+      textEditingController?.text = _formatted(value);
       setState(() {
         if (widget.onChange != null) {
           widget.onChange!(value);
@@ -288,7 +288,7 @@ class _SpinnerInputState extends State<SpinnerInput>
 
     return ScaleTransition(
       scale: CurvedAnimation(
-          parent: popupAnimationController,
+          parent: popupAnimationController!,
           curve: Interval(0.0, 1.0, curve: Curves.elasticOut)),
       child: Center(
         child: Container(
@@ -345,8 +345,8 @@ class _SpinnerInputState extends State<SpinnerInput>
                       try {
                         double value = widget.numberFormat != null
                             ? widget.numberFormat!
-                                .parse(textEditingController.text).toDouble()
-                            : double.parse(textEditingController.text);
+                                .parse(textEditingController?.text ?? "0").toDouble()
+                            : double.parse(textEditingController?.text ?? "0");
                         if (value <= widget.maxValue &&
                             value >= widget.minValue) {
                           setState(() {
@@ -355,14 +355,14 @@ class _SpinnerInputState extends State<SpinnerInput>
                             }
                           });
                         } else {
-                          textEditingController.text =
+                          textEditingController?.text =
                               _formatted(widget.spinnerValue);
                         }
                       } catch (e) {
-                        textEditingController.text =
+                        textEditingController?.text =
                             _formatted(widget.spinnerValue);
                       }
-                      popupAnimationController.reset();
+                      popupAnimationController?.reset();
                     },
                     child: _popupButtonStyle.child,
                   ),
