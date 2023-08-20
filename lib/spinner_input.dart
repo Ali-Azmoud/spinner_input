@@ -101,8 +101,9 @@ class _SpinnerInputState extends State<SpinnerInput>
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
         textEditingController?.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: textEditingController?.value.text.length ?? 0);
+          baseOffset: 0,
+          extentOffset: textEditingController?.value.text.length ?? 0,
+        );
       }
     });
 
@@ -171,7 +172,8 @@ class _SpinnerInputState extends State<SpinnerInput>
                     highlightColor: _minusSpinnerStyle.highlightColor,
                     highlightElevation: _minusSpinnerStyle.highlightElevation,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: _minusSpinnerStyle.borderRadius!),
+                      borderRadius: _minusSpinnerStyle.borderRadius!,
+                    ),
                     onPressed: () {
                       decrease();
                     },
@@ -191,23 +193,26 @@ class _SpinnerInputState extends State<SpinnerInput>
               ),
               GestureDetector(
                 onTap: () {
-                  if (widget.disabledPopup == false && popupAnimationController != null) {
+                  if (widget.disabledPopup == false &&
+                      popupAnimationController != null) {
                     if (popupAnimationController!.isDismissed) {
                       popupAnimationController!.forward();
                       _focusNode.requestFocus();
-                    } else
+                    } else {
                       popupAnimationController!.reverse();
+                    }
                   }
                 },
                 child: Container(
-                    width: widget.middleNumberWidth,
-                    padding: widget.middleNumberPadding,
-                    color: widget.middleNumberBackground,
-                    child: Text(
-                      _formatted(widget.spinnerValue),
-                      textAlign: TextAlign.center,
-                      style: widget.middleNumberStyle,
-                    )),
+                  width: widget.middleNumberWidth,
+                  padding: widget.middleNumberPadding,
+                  color: widget.middleNumberBackground,
+                  child: Text(
+                    _formatted(widget.spinnerValue),
+                    textAlign: TextAlign.center,
+                    style: widget.middleNumberStyle,
+                  ),
+                ),
               ),
               Container(
                 width: _plusSpinnerStyle.width,
@@ -221,7 +226,8 @@ class _SpinnerInputState extends State<SpinnerInput>
                     color: _plusSpinnerStyle.color,
                     textColor: _plusSpinnerStyle.textColor,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: _plusSpinnerStyle.borderRadius!),
+                      borderRadius: _plusSpinnerStyle.borderRadius!,
+                    ),
                     onPressed: () {
                       increase();
                     },
@@ -287,8 +293,9 @@ class _SpinnerInputState extends State<SpinnerInput>
 
     return ScaleTransition(
       scale: CurvedAnimation(
-          parent: popupAnimationController!,
-          curve: Interval(0.0, 1.0, curve: Curves.elasticOut)),
+        parent: popupAnimationController!,
+        curve: Interval(0.0, 1.0, curve: Curves.elasticOut),
+      ),
       child: Center(
         child: Container(
           padding: EdgeInsets.all(5),
@@ -321,8 +328,9 @@ class _SpinnerInputState extends State<SpinnerInput>
                   textAlign: TextAlign.center,
                   style: widget.popupTextStyle,
                   decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      border: InputBorder.none),
+                    contentPadding: EdgeInsets.all(0),
+                    border: InputBorder.none,
+                  ),
                   controller: textEditingController,
                 ),
               ),
@@ -338,13 +346,15 @@ class _SpinnerInputState extends State<SpinnerInput>
                     highlightColor: _popupButtonStyle.highlightColor,
                     highlightElevation: _popupButtonStyle.highlightElevation,
                     shape: new RoundedRectangleBorder(
-                        borderRadius: _popupButtonStyle.borderRadius!),
+                      borderRadius: _popupButtonStyle.borderRadius!,
+                    ),
                     onPressed: () {
                       FocusScope.of(context).requestFocus(new FocusNode());
                       try {
                         double value = widget.numberFormat != null
                             ? widget.numberFormat!
-                                .parse(textEditingController?.text ?? "0").toDouble()
+                                .parse(textEditingController?.text ?? "0")
+                                .toDouble()
                             : double.parse(textEditingController?.text ?? "0");
                         if (value <= widget.maxValue &&
                             value >= widget.minValue) {
