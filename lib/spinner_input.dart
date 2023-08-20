@@ -164,7 +164,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                 width: _minusSpinnerStyle.width,
                 height: _minusSpinnerStyle.height,
                 child: GestureDetector(
-                  child: RaisedButton(
+                  child: MaterialButton(
                     padding: EdgeInsets.all(0),
                     color: _minusSpinnerStyle.color,
                     textColor: _minusSpinnerStyle.textColor,
@@ -214,7 +214,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                 width: _plusSpinnerStyle.width,
                 height: _plusSpinnerStyle.height,
                 child: GestureDetector(
-                  child: RaisedButton(
+                  child: MaterialButton(
                     elevation: _plusSpinnerStyle.elevation,
                     highlightColor: _plusSpinnerStyle.highlightColor,
                     highlightElevation: _plusSpinnerStyle.highlightElevation,
@@ -331,7 +331,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                 child: Container(
                   width: _popupButtonStyle.width,
                   height: _popupButtonStyle.height,
-                  child: RaisedButton(
+                  child: MaterialButton(
                     padding: EdgeInsets.all(1),
                     color: _popupButtonStyle.color,
                     textColor: _popupButtonStyle.textColor,
