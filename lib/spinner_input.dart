@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 
 import 'package:intl/intl.dart' as intl;
@@ -56,11 +55,11 @@ class SpinnerInput extends StatefulWidget {
     this.middleNumberBackground,
     this.middleNumberPadding = const EdgeInsets.all(5),
     this.middleNumberStyle = const TextStyle(fontSize: 20),
-    this.maxValue: 100,
-    this.minValue: 0,
-    this.step: 1,
-    this.fractionDigits: 0,
-    this.longPressSpeed: const Duration(milliseconds: 50),
+    this.maxValue = 100,
+    this.minValue = 0,
+    this.step = 1,
+    this.fractionDigits = 0,
+    this.longPressSpeed = const Duration(milliseconds: 50),
     this.disabledLongPress = false,
     this.disabledPopup = false,
     this.onChange,
