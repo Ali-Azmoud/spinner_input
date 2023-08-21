@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:spinner_input/spinner_input.dart';
 
-void main() => runApp(MySpinner());
+void main() => runApp(const MySpinner());
 
 class MySpinner extends StatefulWidget {
+  const MySpinner({Key? key}) : super(key: key);
+
   @override
-  _MySpinnerState createState() => _MySpinnerState();
+  MySpinnerState createState() => MySpinnerState();
 }
 
-class _MySpinnerState extends State<MySpinner> {
+class MySpinnerState extends State<MySpinner> {
   double spinner = 0;
   double spinner3 = -5;
   double spinner4 = 20;
@@ -24,7 +26,7 @@ class _MySpinnerState extends State<MySpinner> {
           children: <Widget>[
             // default spinner
             Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               child: SpinnerInput(
                 spinnerValue: spinner,
                 // minValue: 0,
@@ -39,7 +41,7 @@ class _MySpinnerState extends State<MySpinner> {
 
             // Set step ( can be int or double )
             Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               child: SpinnerInput(
                 minValue: 0,
                 maxValue: 200,
@@ -55,7 +57,7 @@ class _MySpinnerState extends State<MySpinner> {
                   borderRadius: BorderRadius.circular(0),
                 ),
                 middleNumberWidth: 70,
-                middleNumberStyle: TextStyle(fontSize: 21),
+                middleNumberStyle: const TextStyle(fontSize: 21),
                 middleNumberBackground: Colors.yellowAccent.withOpacity(0.5),
                 spinnerValue: spinner3,
                 onChange: (newValue) {
@@ -68,7 +70,7 @@ class _MySpinnerState extends State<MySpinner> {
 
             // Disable long press and input-popup
             Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               child: SpinnerInput(
                 minValue: 0,
                 maxValue: 200,
@@ -86,7 +88,7 @@ class _MySpinnerState extends State<MySpinner> {
 
             // A little more customized buttons
             Container(
-              margin: EdgeInsets.all(20),
+              margin: const EdgeInsets.all(20),
               child: SpinnerInput(
                 minValue: 0,
                 maxValue: 200,
@@ -98,7 +100,7 @@ class _MySpinnerState extends State<MySpinner> {
                   width: 60,
                   elevation: 1,
                   highlightElevation: 10,
-                  child: Icon(Icons.thumb_up),
+                  child: const Icon(Icons.thumb_up),
                 ),
                 minusButton: SpinnerButtonStyle(
                   color: Colors.red,
@@ -115,7 +117,7 @@ class _MySpinnerState extends State<MySpinner> {
 
             // RTL support
             Container(
-              margin: EdgeInsets.all(50),
+              margin: const EdgeInsets.all(50),
               child: SpinnerInput(
                 direction: TextDirection.rtl,
                 spinnerValue: spinner6,

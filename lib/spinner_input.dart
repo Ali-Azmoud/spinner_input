@@ -49,7 +49,8 @@ class SpinnerInput extends StatefulWidget {
   final TextStyle popupTextStyle;
   final TextDirection direction;
 
-  SpinnerInput({
+  const SpinnerInput({
+    Key? key,
     required this.spinnerValue,
     this.middleNumberWidth,
     this.middleNumberBackground,
@@ -70,13 +71,13 @@ class SpinnerInput extends StatefulWidget {
     this.direction = TextDirection.ltr,
     this.popupTextStyle =
         const TextStyle(fontSize: 18, color: Colors.black87, height: 1.15),
-  });
+  }) : super(key: key);
 
   @override
-  _SpinnerInputState createState() => _SpinnerInputState();
+  SpinnerInputState createState() => SpinnerInputState();
 }
 
-class _SpinnerInputState extends State<SpinnerInput>
+class SpinnerInputState extends State<SpinnerInput>
     with TickerProviderStateMixin {
   TextEditingController? textEditingController;
   AnimationController? popupAnimationController;
@@ -95,8 +96,8 @@ class _SpinnerInputState extends State<SpinnerInput>
         TextEditingController(text: _formatted(widget.spinnerValue));
 
     /// popup animation controller
-    popupAnimationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    popupAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
@@ -109,8 +110,8 @@ class _SpinnerInputState extends State<SpinnerInput>
 
     // initialize buttons
     _plusSpinnerStyle = widget.plusButton ?? SpinnerButtonStyle();
-    _plusSpinnerStyle.child ??= Icon(Icons.add);
-    _plusSpinnerStyle.color ??= Color(0xff9EA8F0);
+    _plusSpinnerStyle.child ??= const Icon(Icons.add);
+    _plusSpinnerStyle.color ??= const Color(0xff9EA8F0);
     _plusSpinnerStyle.textColor ??= Colors.white;
     _plusSpinnerStyle.borderRadius ??= BorderRadius.circular(50);
     _plusSpinnerStyle.width ??= 35;
@@ -120,8 +121,8 @@ class _SpinnerInputState extends State<SpinnerInput>
     _plusSpinnerStyle.highlightElevation ??= null;
 
     _minusSpinnerStyle = widget.minusButton ?? SpinnerButtonStyle();
-    _minusSpinnerStyle.child ??= Icon(Icons.remove);
-    _minusSpinnerStyle.color ??= Color(0xff9EA8F0);
+    _minusSpinnerStyle.child ??= const Icon(Icons.remove);
+    _minusSpinnerStyle.color ??= const Color(0xff9EA8F0);
     _minusSpinnerStyle.textColor ??= Colors.white;
     _minusSpinnerStyle.borderRadius ??= BorderRadius.circular(50);
     _minusSpinnerStyle.width ??= 35;
@@ -131,7 +132,7 @@ class _SpinnerInputState extends State<SpinnerInput>
     _minusSpinnerStyle.highlightElevation ??= null;
 
     _popupButtonStyle = widget.popupButton ?? SpinnerButtonStyle();
-    _popupButtonStyle.child ??= Icon(Icons.check);
+    _popupButtonStyle.child ??= const Icon(Icons.check);
     _popupButtonStyle.color ??= Colors.lightGreen;
     _popupButtonStyle.textColor ??= Colors.white;
     _popupButtonStyle.borderRadius ??= BorderRadius.circular(5);
@@ -160,18 +161,18 @@ class _SpinnerInputState extends State<SpinnerInput>
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: _minusSpinnerStyle.width,
                 height: _minusSpinnerStyle.height,
                 child: GestureDetector(
                   child: MaterialButton(
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     color: _minusSpinnerStyle.color,
                     textColor: _minusSpinnerStyle.textColor,
                     elevation: _minusSpinnerStyle.elevation,
                     highlightColor: _minusSpinnerStyle.highlightColor,
                     highlightElevation: _minusSpinnerStyle.highlightElevation,
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                       borderRadius: _minusSpinnerStyle.borderRadius!,
                     ),
                     onPressed: () {
@@ -214,7 +215,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                   ),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: _plusSpinnerStyle.width,
                 height: _plusSpinnerStyle.height,
                 child: GestureDetector(
@@ -222,10 +223,10 @@ class _SpinnerInputState extends State<SpinnerInput>
                     elevation: _plusSpinnerStyle.elevation,
                     highlightColor: _plusSpinnerStyle.highlightColor,
                     highlightElevation: _plusSpinnerStyle.highlightElevation,
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     color: _plusSpinnerStyle.color,
                     textColor: _plusSpinnerStyle.textColor,
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                       borderRadius: _plusSpinnerStyle.borderRadius!,
                     ),
                     onPressed: () {
@@ -294,15 +295,15 @@ class _SpinnerInputState extends State<SpinnerInput>
     return ScaleTransition(
       scale: CurvedAnimation(
         parent: popupAnimationController!,
-        curve: Interval(0.0, 1.0, curve: Curves.elasticOut),
+        curve: const Interval(0.0, 1.0, curve: Curves.elasticOut),
       ),
       child: Center(
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 10,
@@ -327,7 +328,7 @@ class _SpinnerInputState extends State<SpinnerInput>
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
                   style: widget.popupTextStyle,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     contentPadding: EdgeInsets.all(0),
                     border: InputBorder.none,
                   ),
@@ -335,21 +336,21 @@ class _SpinnerInputState extends State<SpinnerInput>
                 ),
               ),
               Expanded(
-                child: Container(
+                child: SizedBox(
                   width: _popupButtonStyle.width,
                   height: _popupButtonStyle.height,
                   child: MaterialButton(
-                    padding: EdgeInsets.all(1),
+                    padding: const EdgeInsets.all(1),
                     color: _popupButtonStyle.color,
                     textColor: _popupButtonStyle.textColor,
                     elevation: _popupButtonStyle.elevation,
                     highlightColor: _popupButtonStyle.highlightColor,
                     highlightElevation: _popupButtonStyle.highlightElevation,
-                    shape: new RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                       borderRadius: _popupButtonStyle.borderRadius!,
                     ),
                     onPressed: () {
-                      FocusScope.of(context).requestFocus(new FocusNode());
+                      FocusScope.of(context).requestFocus(FocusNode());
                       try {
                         double value = widget.numberFormat != null
                             ? widget.numberFormat!
