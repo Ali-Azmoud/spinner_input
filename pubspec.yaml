@@ -1,6 +1,6 @@
 name: spinner_input_plus
 description: A Spinner Input for flutter. like html5 input-spinners
-version: 0.1.2
+version: 0.0.1
 homepage: https://github.com/CsabaConsulting/spinner_input_plus
 
 environment:
@@ -12,6 +12,8 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  analyzer: ^6.2.0
+  flutter_lints: ^2.0.2
   flutter_test:
     sdk: flutter
 
