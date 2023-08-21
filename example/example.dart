@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:spinner_input/spinner_input.dart';
+import 'package:spinner_input_plus/spinner_input.dart';
 
 void main() => runApp(const MySpinner());
 
