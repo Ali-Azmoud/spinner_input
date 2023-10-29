@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:intl/intl.dart' as intl;
 
 /// Spinner Input like HTML5 spinners
 class SpinnerButtonStyle {
-  Color color;
+  Color? color;
 
-  Color textColor;
-  Widget child;
-  double width;
-  double height;
-  BorderRadius borderRadius;
-  double highlightElevation;
-  Color highlightColor;
-  double elevation;
+  Color? textColor;
+  Widget? child;
+  double? width;
+  double? height;
+  BorderRadius? borderRadius;
+  double? highlightElevation;
+  Color? highlightColor;
+  double? elevation;
 
   SpinnerButtonStyle(
       {this.color,
@@ -30,89 +31,87 @@ class SpinnerButtonStyle {
 class SpinnerInput extends StatefulWidget {
   final bool disabledPopup;
   final double spinnerValue;
-  final double middleNumberWidth;
+  final double? middleNumberWidth;
   final EdgeInsets middleNumberPadding;
   final TextStyle middleNumberStyle;
-  final Color middleNumberBackground;
+  final Color? middleNumberBackground;
   final double minValue;
   final double maxValue;
   final double step;
   final int fractionDigits;
   final Duration longPressSpeed;
-  final Function(double newValue) onChange;
+  final Function(double newValue)? onChange;
   final bool disabledLongPress;
-  final SpinnerButtonStyle plusButton;
-  final SpinnerButtonStyle minusButton;
-  final SpinnerButtonStyle popupButton;
+  final SpinnerButtonStyle? plusButton;
+  final SpinnerButtonStyle? minusButton;
+  final SpinnerButtonStyle? popupButton;
+  final intl.NumberFormat? numberFormat;
   final TextStyle popupTextStyle;
   final TextDirection direction;
 
-  SpinnerInput({
-    @required this.spinnerValue,
+  const SpinnerInput({
+    Key? key,
+    required this.spinnerValue,
     this.middleNumberWidth,
     this.middleNumberBackground,
     this.middleNumberPadding = const EdgeInsets.all(5),
     this.middleNumberStyle = const TextStyle(fontSize: 20),
-    this.maxValue: 100,
-    this.minValue: 0,
-    this.step: 1,
-    this.fractionDigits: 0,
-    this.longPressSpeed: const Duration(milliseconds: 50),
+    this.maxValue = 100,
+    this.minValue = 0,
+    this.step = 1,
+    this.fractionDigits = 0,
+    this.longPressSpeed = const Duration(milliseconds: 50),
     this.disabledLongPress = false,
     this.disabledPopup = false,
     this.onChange,
     this.plusButton,
     this.minusButton,
     this.popupButton,
+    this.numberFormat,
     this.direction = TextDirection.ltr,
     this.popupTextStyle =
         const TextStyle(fontSize: 18, color: Colors.black87, height: 1.15),
-  });
+  }) : super(key: key);
 
   @override
-  _SpinnerInputState createState() => _SpinnerInputState();
+  SpinnerInputState createState() => SpinnerInputState();
 }
 
-class _SpinnerInputState extends State<SpinnerInput>
+class SpinnerInputState extends State<SpinnerInput>
     with TickerProviderStateMixin {
-  TextEditingController textEditingController;
-  AnimationController popupAnimationController;
+  TextEditingController? textEditingController;
+  AnimationController? popupAnimationController;
   final _focusNode = FocusNode();
 
-  Timer timer;
-  double _spinnerValue;
+  Timer? timer;
 
-  SpinnerButtonStyle _plusSpinnerStyle;
-  SpinnerButtonStyle _minusSpinnerStyle;
-  SpinnerButtonStyle _popupButtonStyle;
+  SpinnerButtonStyle _plusSpinnerStyle = SpinnerButtonStyle();
+  SpinnerButtonStyle _minusSpinnerStyle = SpinnerButtonStyle();
+  SpinnerButtonStyle _popupButtonStyle = SpinnerButtonStyle();
 
   @override
   void initState() {
-
-    /// initializing variables
-    _spinnerValue = widget.spinnerValue;
-
-    /// popup textfield
-    textEditingController = TextEditingController(
-        text: widget.spinnerValue.toStringAsFixed(widget.fractionDigits));
+    /// popup text field
+    textEditingController =
+        TextEditingController(text: _formatted(widget.spinnerValue));
 
     /// popup animation controller
-    popupAnimationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    popupAnimationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
-        textEditingController.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: textEditingController.value.text.length);
+        textEditingController?.selection = TextSelection(
+          baseOffset: 0,
+          extentOffset: textEditingController?.value.text.length ?? 0,
+        );
       }
     });
 
-
     // initialize buttons
     _plusSpinnerStyle = widget.plusButton ?? SpinnerButtonStyle();
-    _plusSpinnerStyle.child ??= Icon(Icons.add);
-    _plusSpinnerStyle.color ??= Color(0xff9EA8F0);
+    _plusSpinnerStyle.child ??= const Icon(Icons.add);
+    _plusSpinnerStyle.color ??= const Color(0xff9EA8F0);
     _plusSpinnerStyle.textColor ??= Colors.white;
     _plusSpinnerStyle.borderRadius ??= BorderRadius.circular(50);
     _plusSpinnerStyle.width ??= 35;
@@ -122,8 +121,8 @@ class _SpinnerInputState extends State<SpinnerInput>
     _plusSpinnerStyle.highlightElevation ??= null;
 
     _minusSpinnerStyle = widget.minusButton ?? SpinnerButtonStyle();
-    _minusSpinnerStyle.child ??= Icon(Icons.remove);
-    _minusSpinnerStyle.color ??= Color(0xff9EA8F0);
+    _minusSpinnerStyle.child ??= const Icon(Icons.remove);
+    _minusSpinnerStyle.color ??= const Color(0xff9EA8F0);
     _minusSpinnerStyle.textColor ??= Colors.white;
     _minusSpinnerStyle.borderRadius ??= BorderRadius.circular(50);
     _minusSpinnerStyle.width ??= 35;
@@ -133,7 +132,7 @@ class _SpinnerInputState extends State<SpinnerInput>
     _minusSpinnerStyle.highlightElevation ??= null;
 
     _popupButtonStyle = widget.popupButton ?? SpinnerButtonStyle();
-    _popupButtonStyle.child ??= Icon(Icons.check);
+    _popupButtonStyle.child ??= const Icon(Icons.check);
     _popupButtonStyle.color ??= Colors.lightGreen;
     _popupButtonStyle.textColor ??= Colors.white;
     _popupButtonStyle.borderRadius ??= BorderRadius.circular(5);
@@ -149,7 +148,7 @@ class _SpinnerInputState extends State<SpinnerInput>
   @override
   void dispose() {
     // Clean up the controller when the Widget is removed from the Widget tree
-    textEditingController.dispose();
+    textEditingController?.dispose();
     super.dispose();
   }
 
@@ -162,19 +161,20 @@ class _SpinnerInputState extends State<SpinnerInput>
           Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(
+              SizedBox(
                 width: _minusSpinnerStyle.width,
                 height: _minusSpinnerStyle.height,
                 child: GestureDetector(
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(0),
+                  child: MaterialButton(
+                    padding: const EdgeInsets.all(0),
                     color: _minusSpinnerStyle.color,
                     textColor: _minusSpinnerStyle.textColor,
                     elevation: _minusSpinnerStyle.elevation,
                     highlightColor: _minusSpinnerStyle.highlightColor,
                     highlightElevation: _minusSpinnerStyle.highlightElevation,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: _minusSpinnerStyle.borderRadius),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: _minusSpinnerStyle.borderRadius!,
+                    ),
                     onPressed: () {
                       decrease();
                     },
@@ -188,43 +188,47 @@ class _SpinnerInputState extends State<SpinnerInput>
                     }
                   },
                   onLongPressUp: () {
-                    if (timer != null) timer.cancel();
+                    timer?.cancel();
                   },
                 ),
               ),
               GestureDetector(
                 onTap: () {
-                  if (widget.disabledPopup == false) {
-                    if (popupAnimationController.isDismissed) {
-                      popupAnimationController.forward();
-                    } else
-                      popupAnimationController.reverse();
+                  if (widget.disabledPopup == false &&
+                      popupAnimationController != null) {
+                    if (popupAnimationController!.isDismissed) {
+                      popupAnimationController!.forward();
+                      _focusNode.requestFocus();
+                    } else {
+                      popupAnimationController!.reverse();
+                    }
                   }
                 },
                 child: Container(
-                    width: widget.middleNumberWidth,
-                    padding: widget.middleNumberPadding,
-                    color: widget.middleNumberBackground,
-                    child: Text(
-                      widget.spinnerValue
-                          .toStringAsFixed(widget.fractionDigits),
-                      textAlign: TextAlign.center,
-                      style: widget.middleNumberStyle,
-                    )),
+                  width: widget.middleNumberWidth,
+                  padding: widget.middleNumberPadding,
+                  color: widget.middleNumberBackground,
+                  child: Text(
+                    _formatted(widget.spinnerValue),
+                    textAlign: TextAlign.center,
+                    style: widget.middleNumberStyle,
+                  ),
+                ),
               ),
-              Container(
+              SizedBox(
                 width: _plusSpinnerStyle.width,
                 height: _plusSpinnerStyle.height,
                 child: GestureDetector(
-                  child: RaisedButton(
+                  child: MaterialButton(
                     elevation: _plusSpinnerStyle.elevation,
                     highlightColor: _plusSpinnerStyle.highlightColor,
                     highlightElevation: _plusSpinnerStyle.highlightElevation,
-                    padding: EdgeInsets.all(0),
+                    padding: const EdgeInsets.all(0),
                     color: _plusSpinnerStyle.color,
                     textColor: _plusSpinnerStyle.textColor,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: _plusSpinnerStyle.borderRadius),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: _plusSpinnerStyle.borderRadius!,
+                    ),
                     onPressed: () {
                       increase();
                     },
@@ -238,44 +242,47 @@ class _SpinnerInputState extends State<SpinnerInput>
                     }
                   },
                   onLongPressUp: () {
-                    if (timer != null) timer.cancel();
+                    timer?.cancel();
                   },
                 ),
               ),
             ],
           ),
-          Positioned(
-            left: 0,
-            top: 0,
-            right: 0,
-            bottom: 0,
-            child: textFieldPopUp(),
-          ),
+          if (widget.disabledPopup == false)
+            Positioned(
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              child: textFieldPopUp(),
+            ),
         ],
       ),
     );
   }
 
   void increase() {
-    double value = _spinnerValue;
+    double value = widget.spinnerValue;
     value += widget.step;
     if (value <= widget.maxValue) {
-      textEditingController.text = value.toStringAsFixed(widget.fractionDigits);
-      _spinnerValue = value;
+      textEditingController?.text = _formatted(value);
       setState(() {
-        widget.onChange(value);
+        if (widget.onChange != null) {
+          widget.onChange!(value);
+        }
       });
     }
   }
 
   void decrease() {
-    double value = _spinnerValue;
+    double value = widget.spinnerValue;
     value -= widget.step;
     if (value >= widget.minValue) {
-      textEditingController.text = value.toStringAsFixed(widget.fractionDigits);
-      _spinnerValue = value;
+      textEditingController?.text = _formatted(value);
       setState(() {
-        widget.onChange(value);
+        if (widget.onChange != null) {
+          widget.onChange!(value);
+        }
       });
     }
   }
@@ -287,15 +294,16 @@ class _SpinnerInputState extends State<SpinnerInput>
 
     return ScaleTransition(
       scale: CurvedAnimation(
-          parent: popupAnimationController,
-          curve: Interval(0.0, 1.0, curve: Curves.elasticOut)),
+        parent: popupAnimationController!,
+        curve: const Interval(0.0, 1.0, curve: Curves.elasticOut),
+      ),
       child: Center(
         child: Container(
-          padding: EdgeInsets.all(5),
+          padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(5),
-              boxShadow: [
+              boxShadow: const [
                 BoxShadow(
                   color: Colors.black12,
                   blurRadius: 10,
@@ -307,49 +315,64 @@ class _SpinnerInputState extends State<SpinnerInput>
             children: <Widget>[
               Expanded(
                 child: TextField(
+                  // inputFormatters: [
+                  //   TextInputFormatter.withFunction((oldValue, newValue) {
+                  //     if (widget.numberFormat != null) {
+                  //       return TextEditingValue(text: );
+                  //     }
+                  //     return newValue;
+                  //   })
+                  // ],
                   maxLength: maxLength,
                   focusNode: _focusNode,
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.center,
                   style: widget.popupTextStyle,
-                  decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(0),
-                      border: InputBorder.none),
+                  decoration: const InputDecoration(
+                    contentPadding: EdgeInsets.all(0),
+                    border: InputBorder.none,
+                  ),
                   controller: textEditingController,
                 ),
               ),
               Expanded(
-                child: Container(
+                child: SizedBox(
                   width: _popupButtonStyle.width,
                   height: _popupButtonStyle.height,
-                  child: RaisedButton(
-                    padding: EdgeInsets.all(1),
+                  child: MaterialButton(
+                    padding: const EdgeInsets.all(1),
                     color: _popupButtonStyle.color,
                     textColor: _popupButtonStyle.textColor,
                     elevation: _popupButtonStyle.elevation,
                     highlightColor: _popupButtonStyle.highlightColor,
                     highlightElevation: _popupButtonStyle.highlightElevation,
-                    shape: new RoundedRectangleBorder(
-                        borderRadius: _popupButtonStyle.borderRadius),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: _popupButtonStyle.borderRadius!,
+                    ),
                     onPressed: () {
-                      FocusScope.of(context).requestFocus(new FocusNode());
+                      FocusScope.of(context).requestFocus(FocusNode());
                       try {
-                        double value = double.parse(textEditingController.text);
+                        double value = widget.numberFormat != null
+                            ? widget.numberFormat!
+                                .parse(textEditingController?.text ?? "0")
+                                .toDouble()
+                            : double.parse(textEditingController?.text ?? "0");
                         if (value <= widget.maxValue &&
                             value >= widget.minValue) {
-                          _spinnerValue = value;
                           setState(() {
-                            widget.onChange(value);
+                            if (widget.onChange != null) {
+                              widget.onChange!(value);
+                            }
                           });
                         } else {
-                          textEditingController.text = _spinnerValue
-                              .toStringAsFixed(widget.fractionDigits);
+                          textEditingController?.text =
+                              _formatted(widget.spinnerValue);
                         }
                       } catch (e) {
-                        textEditingController.text = _spinnerValue
-                            .toStringAsFixed(widget.fractionDigits);
+                        textEditingController?.text =
+                            _formatted(widget.spinnerValue);
                       }
-                      popupAnimationController.reset();
+                      popupAnimationController?.reset();
                     },
                     child: _popupButtonStyle.child,
                   ),
@@ -360,5 +383,11 @@ class _SpinnerInputState extends State<SpinnerInput>
         ),
       ),
     );
+  }
+
+  String _formatted(double value) {
+    return widget.numberFormat != null
+        ? widget.numberFormat!.format(value)
+        : value.toStringAsFixed(widget.fractionDigits);
   }
 }
