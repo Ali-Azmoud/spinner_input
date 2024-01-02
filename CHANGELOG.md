@@ -7,3 +7,8 @@
 - Upgrade dependencies
 - Brush up code
 - Introducing Analyzer and Linter and fixing reported issue
+
+# [0.0.2] - 01/01/2024
+
+- Increase description length to fall between 60-180 to increase pub score.
+- Adding code comments (partially the goal is to increase pub score)
