@@ -12,3 +12,4 @@
 
 - Increase description length to fall between 60-180 to increase pub score.
 - Adding code comments (partially the goal is to increase pub score)
+- Increase package versions
