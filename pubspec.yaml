@@ -1,6 +1,6 @@
 name: spinner_input_plus
 description: A Spinner Input for flutter. Almost like html5 input-spinners, it has up/down buttons and also explicit value edit capability.
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/CsabaConsulting/spinner_input_plus
 
 environment:
