@@ -13,3 +13,7 @@
 - Increase description length to fall between 60-180 to increase pub score.
 - Adding code comments (partially the goal is to increase pub score)
 - Increase package versions
+
+# [0.0.3] - 01/01/2024
+
+- Correct code format after code documentation: fields require now extra new line separation
