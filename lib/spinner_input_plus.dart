@@ -11,16 +11,22 @@ class SpinnerButtonStyle {
   /// Text color of the spinner button
   Color? textColor;
   Widget? child;
+
   /// Width of the spinner button
   double? width;
+
   /// Height of the spinner button
   double? height;
+
   /// Border radius of the spinner button
   BorderRadius? borderRadius;
+
   /// Height elevation of the spinner button
   double? highlightElevation;
+
   /// Highlight color of the spinner button
   Color? highlightColor;
+
   /// Elevation of the spinner button
   double? elevation;
 
@@ -40,40 +46,58 @@ class SpinnerButtonStyle {
 class SpinnerInput extends StatefulWidget {
   /// Disable the value edit popup
   final bool disabledPopup;
+
   /// The initial spinner value
   final double spinnerValue;
+
   /// Width of the text in the middle (displaying current value)
   final double? middleNumberWidth;
+
   /// Padding of the text in the middle (displaying current value)
   final EdgeInsets middleNumberPadding;
+
   /// Text style in the middle (displaying current value)
   final TextStyle middleNumberStyle;
+
   /// Background of the text in the middle (displaying current value)
   final Color? middleNumberBackground;
+
   /// The minimum allowed spinner value
   final double minValue;
+
   /// The maximum allowed spinner value
   final double maxValue;
+
   /// Step size of one spinner tick
   final double step;
+
   /// Number of fractional digits displayed
   final int fractionDigits;
+
   /// Speed of the long press (duration)
   final Duration longPressSpeed;
+
   /// OnChange handler callback
   final Function(double newValue)? onChange;
+
   /// Is long press disabled
   final bool disabledLongPress;
+
   /// Plus button's style
   final SpinnerButtonStyle? plusButton;
+
   /// Minus button's style
   final SpinnerButtonStyle? minusButton;
+
   /// Popup button's style
   final SpinnerButtonStyle? popupButton;
+
   /// Number format of the spinner value
   final intl.NumberFormat? numberFormat;
+
   /// Text style of the value edit popup
   final TextStyle popupTextStyle;
+
   /// Text direction of the value edit popup
   final TextDirection direction;
 
